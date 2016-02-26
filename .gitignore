@@ -1,3 +1,7 @@
+# GO
+# Generated files
+libsum.h
+
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o
 *.a
@@ -22,3 +26,34 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# RUBY
+vendor/
+coverage
+rdoc
+pkg
+_notes
+doc
+.yardoc
+.bundle
+**/bin
+*.rbc
+.rvmrc
+.ruby-version
+tmp
+tags
+
+## MAC OS
+.DS_Store
+
+## TEXTMATE
+*.tmproj
+tmtags
+
+## EMACS
+*~
+\#*
+.\#*
+
+## VIM
+*.swp
