@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+
 	riak "github.com/basho/riak-go-client"
 )
 
@@ -40,6 +41,13 @@ func ErrExit(err error) {
 }
 
 var cluster *riak.Cluster
+
+//export TestStruct
+func TestStruct(a FetchArgs) {
+	LogDebug("[TestStruct]", "bucketType: %v", C.GoString(a.bucketType))
+	LogDebug("[TestStruct]", "bucket: %v", C.GoString(a.bucket))
+	LogDebug("[TestStruct]", "key: %v", C.GoString(a.key))
+}
 
 //export Start
 func Start() {
