@@ -3,36 +3,14 @@
 require 'ffi'
 require 'benchmark'
 
-module Sum
+module Riak
   extend FFI::Library
-  ffi_lib './libsum.so'
-  attach_function :add, [:int, :int], :int
+  ffi_lib './riak-client.so'
+  attach_function :RiakClusterStart, [], :void
+  attach_function :RiakClusterStop, [], :void
+  attach_function :RiakClusterPing, [], :bool
 end
 
-def ffi_bm
-    x = rand(1000)
-    y = rand(1000)
-    for i in 1..50000
-        Sum.add(x, y)
-    end
-end
-
-def ruby_bm
-    x = rand(1000)
-    y = rand(1000)
-    for i in 1..50000
-        x + y
-    end
-end
-
-Benchmark.bm(11) do |x|
-  x.report('FFI first:')  { ffi_bm }
-  x.report('FFI second:') { ffi_bm }
-  x.report('FFI third:')  { ffi_bm }
-end
-
-Benchmark.bm(10) do |x|
-  x.report('RB first:')  { ruby_bm }
-  x.report('RB second:') { ruby_bm }
-  x.report('RB third:')  { ruby_bm }
-end
+Riak.RiakClusterStart()
+puts "Ping result: #{Riak.RiakClusterPing()}"
+Riak.RiakClusterStop()

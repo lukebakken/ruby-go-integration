@@ -1,13 +1,13 @@
 .PHONY: all install-deps clean
 
-all: libsum.so
+all: riak-client.so
 	bundle exec ./app.rb
 
-libsum.so:
-	go build -buildmode=c-shared -o libsum.so libsum.go
+riak-client.so:
+	go build -buildmode=c-shared -o riak-client.so riak-client.go
 
 install-deps:
 	bundler install --binstubs --path vendor
 
 clean:
-	rm -f libsum.h libsum.so
+	rm -f riak-client.h riak-client.so
