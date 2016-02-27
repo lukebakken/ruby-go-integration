@@ -6,11 +6,11 @@ require 'benchmark'
 module Riak
   extend FFI::Library
   ffi_lib './riak-client.so'
-  attach_function :RiakClusterStart, [], :void
-  attach_function :RiakClusterStop, [], :void
-  attach_function :RiakClusterPing, [], :bool
+  attach_function :Start, [], :void
+  attach_function :Stop, [], :void
+  attach_function :Ping, [], :bool
 end
 
-Riak.RiakClusterStart()
-puts "Ping result: #{Riak.RiakClusterPing()}"
-Riak.RiakClusterStop()
+Riak.Start()
+puts "Ping result: #{Riak.Ping()}"
+Riak.Stop()

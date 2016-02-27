@@ -1,14 +1,19 @@
 package main
 
+/*
+#include "riak-types.h"
+*/
+import "C"
+
 import (
-	"C"
 	"errors"
 	"fmt"
 	"log"
 	"os"
-
 	riak "github.com/basho/riak-go-client"
 )
+
+type FetchArgs C.struct_fetchArgs
 
 var slog = log.New(os.Stdout, "", log.LstdFlags)
 var elog = log.New(os.Stderr, "", log.LstdFlags)
@@ -36,8 +41,8 @@ func ErrExit(err error) {
 
 var cluster *riak.Cluster
 
-//export RiakClusterStart
-func RiakClusterStart() {
+//export Start
+func Start() {
 	var err error
 
 	var node *riak.Node
@@ -66,8 +71,8 @@ func RiakClusterStart() {
 	}
 }
 
-//export RiakClusterStop
-func RiakClusterStop() {
+//export Stop
+func Stop() {
 	if cluster != nil {
 		if err := cluster.Stop(); err != nil {
 			ErrExit(err)
@@ -75,8 +80,8 @@ func RiakClusterStop() {
 	}
 }
 
-//export RiakClusterPing
-func RiakClusterPing() bool {
+//export Ping
+func Ping() bool {
 	cmd := &riak.PingCommand{}
 	if err := cluster.Execute(cmd); err != nil {
 		ErrExit(err)
@@ -84,15 +89,19 @@ func RiakClusterPing() bool {
 	return cmd.Success()
 }
 
-//export RiakClusterGet
-func RiakClusterGet(btype, bucket, key string) *C.char {
+//export Fetch
+func Fetch(a FetchArgs) *C.char {
 	var err error
 	var cmd riak.Command
 
+	bt := C.GoString(a.bucketType)
+	b := C.GoString(a.bucket)
+	k := C.GoString(a.key)
+
 	builder := riak.NewFetchValueCommandBuilder()
-	cmd, err = builder.WithBucketType(btype).
-		WithBucket(bucket).
-		WithKey(key).
+	cmd, err = builder.WithBucketType(bt).
+		WithBucket(b).
+		WithKey(k).
 		Build()
 	if err != nil {
 		ErrExit(err)
@@ -107,11 +116,9 @@ func RiakClusterGet(btype, bucket, key string) *C.char {
 		return C.CString("")
 	}
 	if len(rsp.Values) == 0 {
-		return C.CString("")
 	}
 	object := rsp.Values[0]
 	return C.CString(string(object.Value))
 }
 
-func main() {
-}
+func main() {}
