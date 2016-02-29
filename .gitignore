@@ -11,6 +11,9 @@ riak-client.h
 _obj
 _test
 
+# Misc
+*.dat
+
 # Architecture specific extensions/prefixes
 *.[568vq]
 [568vq].out

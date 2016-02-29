@@ -1,2 +1,13 @@
-# ruby-go-integration
-Testing out integration of Ruby and Go via FFI
+### Benchmark Results
+
+```
+$ bundle exec ./ruby-multiget-bench.rb
+Key count: 131072
+                       user     system      total        real
+run 1 (mult):     37.390000   4.810000  42.200000 ( 65.852231)
+run 1:            35.250000   4.370000  39.620000 (143.269075)
+run 2 (mult):     38.480000   4.680000  43.160000 ( 66.983006)
+run 2:            34.940000   4.220000  39.160000 (140.027612)
+run 3 (mult):     37.870000   4.660000  42.530000 ( 66.332825)
+run 3:            36.920000   4.020000  40.940000 (148.334756)
+```
