@@ -11,42 +11,19 @@ import (
 	"log"
 	"os"
 
+	util "github.com/lukebakken/goutil"
 	riak "github.com/basho/riak-go-client"
 )
 
 type FetchArgs C.struct_fetchArgs
 
-var slog = log.New(os.Stdout, "", log.LstdFlags)
-var elog = log.New(os.Stderr, "", log.LstdFlags)
-
-func LogInfo(source, format string, v ...interface{}) {
-	slog.Printf(fmt.Sprintf("[INFO] %s %s", source, format), v...)
-}
-
-func LogDebug(source, format string, v ...interface{}) {
-	slog.Printf(fmt.Sprintf("[DEBUG] %s %s", source, format), v...)
-}
-
-func LogError(source, format string, v ...interface{}) {
-	elog.Printf(fmt.Sprintf("[DEBUG] %s %s", source, format), v...)
-}
-
-func LogErr(source string, err error) {
-	elog.Println("[ERROR]", source, err)
-}
-
-func ErrExit(err error) {
-	LogErr("[APP]", err)
-	os.Exit(1)
-}
-
 var cluster *riak.Cluster
 
 //export TestStruct
 func TestStruct(a FetchArgs) {
-	LogDebug("[TestStruct]", "bucketType: %v", C.GoString(a.bucketType))
-	LogDebug("[TestStruct]", "bucket: %v", C.GoString(a.bucket))
-	LogDebug("[TestStruct]", "key: %v", C.GoString(a.key))
+	util.LogDebug("[TestStruct]", "bucketType: %v", C.GoString(a.bucketType))
+	util.LogDebug("[TestStruct]", "bucket: %v", C.GoString(a.bucket))
+	util.LogDebug("[TestStruct]", "key: %v", C.GoString(a.key))
 }
 
 //export Start
@@ -59,10 +36,10 @@ func Start() {
 	}
 	node, err = riak.NewNode(nodeOpts)
 	if err != nil {
-		ErrExit(err)
+		util.ErrExit(err)
 	}
 	if node == nil {
-		ErrExit(errors.New("node was nil"))
+		util.ErrExit(errors.New("node was nil"))
 	}
 
 	nodes := []*riak.Node{node}
@@ -71,11 +48,11 @@ func Start() {
 	}
 	cluster, err = riak.NewCluster(opts)
 	if err != nil {
-		ErrExit(err)
+		util.ErrExit(err)
 	}
 
 	if err = cluster.Start(); err != nil {
-		ErrExit(err)
+		util.ErrExit(err)
 	}
 }
 
@@ -83,7 +60,7 @@ func Start() {
 func Stop() {
 	if cluster != nil {
 		if err := cluster.Stop(); err != nil {
-			ErrExit(err)
+			util.ErrExit(err)
 		}
 	}
 }
@@ -92,7 +69,7 @@ func Stop() {
 func Ping() bool {
 	cmd := &riak.PingCommand{}
 	if err := cluster.Execute(cmd); err != nil {
-		ErrExit(err)
+		util.ErrExit(err)
 	}
 	return cmd.Success()
 }
@@ -112,10 +89,10 @@ func Fetch(a FetchArgs) *C.char {
 		WithKey(k).
 		Build()
 	if err != nil {
-		ErrExit(err)
+		util.ErrExit(err)
 	}
 	if err := cluster.Execute(cmd); err != nil {
-		ErrExit(err)
+		util.ErrExit(err)
 	}
 
 	fvc := cmd.(*riak.FetchValueCommand)
