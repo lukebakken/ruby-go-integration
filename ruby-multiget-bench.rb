@@ -41,3 +41,7 @@ Benchmark.bm(16) do |x|
         x.report("run #{r}:") { fetch_keys(bucket, all_keys) }
     end
 end
+
+# Benchmark.bm do |x|
+#     x.report { fetch_keys_multiget(batchsz, bucket, all_keys) }
+# end
