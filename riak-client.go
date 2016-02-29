@@ -1,6 +1,7 @@
 package main
 
 /*
+#cgo LDFLAGS: libriak.a
 #include "riak-types.h"
 */
 import "C"
@@ -8,8 +9,7 @@ import "C"
 import (
 	"errors"
 	"fmt"
-	"log"
-	"os"
+	"unsafe"
 
 	util "github.com/lukebakken/goutil"
 	riak "github.com/basho/riak-go-client"
@@ -26,23 +26,35 @@ func TestStruct(a FetchArgs) {
 	util.LogDebug("[TestStruct]", "key: %v", C.GoString(a.key))
 }
 
+//export TestCallback
+func TestCallback(pcb unsafe.Pointer) {
+	util.LogDebug("[TestCallback]", "before calling pcb")
+	C.call_tcb_cb((C.cb_fn)(pcb))
+	util.LogDebug("[TestCallback]", "after calling pcb")
+}
+
 //export Start
 func Start() {
 	var err error
 
-	var node *riak.Node
-	nodeOpts := &riak.NodeOptions{
-		RemoteAddress: "127.0.0.1:10017",
-	}
-	node, err = riak.NewNode(nodeOpts)
-	if err != nil {
-		util.ErrExit(err)
-	}
-	if node == nil {
-		util.ErrExit(errors.New("node was nil"))
+	addr_fmt := "riak-test:%d"
+	nodes := make([]*riak.Node, 4)
+	for i := 0; i < 4; i++ {
+		port := 10017 + (i * 10)
+		var node *riak.Node
+		nodeOpts := &riak.NodeOptions{
+			RemoteAddress: fmt.Sprintf(addr_fmt, port),
+		}
+		node, err = riak.NewNode(nodeOpts)
+		if err != nil {
+			util.ErrExit(err)
+		}
+		if node == nil {
+			util.ErrExit(errors.New("node was nil"))
+		}
+		nodes[i] = node
 	}
 
-	nodes := []*riak.Node{node}
 	opts := &riak.ClusterOptions{
 		Nodes: nodes,
 	}

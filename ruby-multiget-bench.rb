@@ -23,6 +23,8 @@ client = Riak::Client.new(:nodes => [
   {:host => h, :pb_port => 10037 },
   {:host => h, :pb_port => 10047 }
 ])
+client.multiget_threads = 8
+
 bucket = client.bucket('tweets')
 
 def fetch_keys_multiget(batchsz, bucket, keys)

@@ -19,14 +19,24 @@ module Riak
     extend FFI::Library
     ffi_lib './riak-client.so'
 
+    callback :tcb_cb, [], :void
+    attach_function :TestCallback, [ :tcb_cb ], :void
+
     attach_function :TestStruct, [ FetchArgs.by_value ], :void
     attach_function :Start, [], :void
     attach_function :Stop, [], :void
     attach_function :Ping, [], :bool
+
+    TestCB = FFI::Function.new(:void, []) do |ignored|
+        puts "IN CALLBACK"
+    end
 end
 
 a = Riak::FetchArgs.new('rb type', 'rb bucket', 'rb key')
 Riak.TestStruct(a)
+
+Riak.TestCallback(Riak::TestCB)
+# puts "Riak.TestCallback tcb_rv: #{tcb_rv}"
 
 # Riak.Start()
 # puts "Ping result: #{Riak.Ping()}"

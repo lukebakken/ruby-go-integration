@@ -1,6 +1,4 @@
-### Benchmark Results
-
-#### Ruby
+### Ruby
 
 ```
 $ bundle exec ./ruby-multiget-bench.rb
@@ -26,11 +24,32 @@ run 3 (mult):     43.730000   6.070000  49.800000 ( 78.410407)
 run 3:            38.370000   4.330000  42.700000 (154.365167)
 ```
 
-#### Go
+#### 8 "threads"
+
+```
+$ bundle exec ./ruby-multiget-bench.rb
+Key count: 131072
+                       user     system      total        real
+run 1 (mult):     38.620000   4.740000  43.360000 ( 70.179233)
+run 1:            34.780000   3.990000  38.770000 (141.304947)
+run 2 (mult):     38.610000   4.590000  43.200000 ( 70.265133)
+run 2:            33.770000   4.370000  38.140000 (137.841870)
+run 3 (mult):     39.790000   4.960000  44.750000 ( 72.846896)
+run 3:            35.260000   4.330000  39.590000 (143.325546)
+```
+
+
+### Go (no Ruby integration)
 
 ```
 ok /home/lbakken/Projects/src/ruby-go-integration/go-bench 42.682s
 ok /home/lbakken/Projects/src/ruby-go-integration/go-bench 42.152s
 ok /home/lbakken/Projects/src/ruby-go-integration/go-bench 42.543s
 ok /home/lbakken/Projects/src/ruby-go-integration/go-bench 41.482s
+```
+
+
+#### Ruby + Go backend
+
+```
 ```

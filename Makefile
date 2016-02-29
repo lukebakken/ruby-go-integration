@@ -3,7 +3,9 @@
 all: riak-client.so
 	bundle exec ./app.rb
 
-riak-client.so:
+libriak.a: libriak.a(riak-client.o)
+
+riak-client.so: libriak.a
 	go build -buildmode=c-shared -o riak-client.so riak-client.go
 
 install-deps:
